@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "embed-explorer"
+version = "0.1.0"
+description = "Explore an embedding space from the terminal: neighbours, clusters, outliers, and drift."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Prabesh Sharma" }]
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries",
+]
+
+[project.urls]
+Homepage = "https://github.com/hellpuffyt/embed-explorer"
+Issues = "https://github.com/hellpuffyt/embed-explorer/issues"
+
+[project.scripts]
+embed-explorer = "embed_explorer.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4", "ruff>=0.5", "mypy>=1.10"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+embed_explorer = ["py.typed"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "N"]
+
+[tool.mypy]
+# Set higher than requires-python solely so mypy can parse numpy's PEP 695
+# type-alias stubs; this does not relax checking of our own 3.10+ syntax.
+python_version = "3.12"
+strict = true
+files = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
