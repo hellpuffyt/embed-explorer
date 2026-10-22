@@ -103,3 +103,13 @@ def test_kmeans_result_inertia_decreases_with_more_clusters() -> None:
     r_small = kmeans(vectors, k=1, seed=0)
     r_large = kmeans(vectors, k=3, seed=0)
     assert r_large.inertia < r_small.inertia
+
+
+def test_silhouette_matches_a_hand_computed_value() -> None:
+    # Clusters {0, 1} and {10, 11} on a line. Point 0: a=1, b=10.5 -> 9.5/10.5;
+    # point 1: a=1, b=9.5 -> 8.5/9.5; the other cluster mirrors these.
+    # (scikit-learn's silhouette_score agrees: 0.8997494...)
+    vectors = np.array([[0.0], [1.0], [10.0], [11.0]])
+    labels = np.array([0, 0, 1, 1], dtype=np.int64)
+    expected = (9.5 / 10.5 + 8.5 / 9.5) / 2
+    assert abs(silhouette_score(vectors, labels) - expected) < 1e-12
