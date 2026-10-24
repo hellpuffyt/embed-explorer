@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -178,3 +179,19 @@ def test_load_unsupported_extension_raises(tmp_path) -> None:
     path.write_text("nothing", encoding="utf-8")
     with pytest.raises(LoadError, match="unsupported"):
         load(path)
+
+
+@pytest.mark.parametrize("bad", [np.nan, np.inf, -np.inf])
+def test_non_finite_vectors_are_rejected(bad: float) -> None:
+    # NaN used to load fine and turn every statistic into nan while the
+    # duplicate search silently skipped the row.
+    vectors = np.array([[1.0, bad], [1.0, 0.0]])
+    with pytest.raises(LoadError, match="NaN or infinite"):
+        EmbeddingSet(ids=["a", "b"], vectors=vectors)
+
+
+def test_non_finite_jsonl_is_rejected(tmp_path: Path) -> None:
+    path = tmp_path / "v.jsonl"
+    path.write_text('{"id": "a", "vector": [1, NaN]}\n{"id": "b", "vector": [1, 0]}\n')
+    with pytest.raises(LoadError, match="NaN or infinite"):
+        load(str(path))

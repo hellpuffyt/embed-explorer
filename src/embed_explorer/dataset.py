@@ -32,6 +32,12 @@ class EmbeddingSet:
     def __post_init__(self) -> None:
         if self.vectors.ndim != 2:
             raise LoadError(f"vectors must be a 2D array, got shape {self.vectors.shape}")
+        finite = np.isfinite(self.vectors).all(axis=1)
+        if not finite.all():
+            # NaN/inf poison every distance they touch: stats print nan and
+            # duplicate/neighbour searches silently skip the affected rows.
+            bad = np.flatnonzero(~finite)[:5].tolist()
+            raise LoadError(f"vectors contain NaN or infinite values (rows {bad})")
         n = self.vectors.shape[0]
         if len(self.ids) != n:
             raise LoadError(f"got {len(self.ids)} ids but {n} vectors")

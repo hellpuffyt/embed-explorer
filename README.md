@@ -87,18 +87,14 @@ for n in nearest_neighbors_by_id(ds, "chunk-42", k=5):
 
 Requires Python 3.10+.
 
-```bash
-pip install embed-explorer
-```
-
-Or from source:
+Not published on PyPI; install from source:
 
 ```bash
 git clone https://github.com/hellpuffyt/embed-explorer.git
 cd embed-explorer
 python -m venv .venv
-./.venv/Scripts/python.exe -m pip install -e ".[dev]"   # Windows
-# .venv/bin/python -m pip install -e ".[dev]"            # macOS/Linux
+.venv/bin/python -m pip install -e ".[dev]"              # macOS/Linux
+# .\.venv\Scripts\python.exe -m pip install -e ".[dev]"  # Windows
 ```
 
 Runtime dependency: `numpy` only. No GPU, no network calls, no scikit-learn.
@@ -142,27 +138,43 @@ embed-explorer outliers chunks.npy --k 8 --top 20
 embed-explorer drift embeddings-2026-07.npy embeddings-2026-08.npy --k 10
 ```
 
-Sample `drift` output (truncated):
+Real `drift` output on two seeded synthetic snapshots (cluster 0 of the old set
+was moved onto cluster 1 in the new set):
+
+```python
+import numpy as np
+rng = np.random.default_rng(0)
+centers = rng.normal(size=(4, 32)) * 5
+old = np.vstack([c + rng.normal(size=(250, 32)) for c in centers])
+new = old + rng.normal(scale=0.3, size=old.shape)
+new[:250] += centers[1] - centers[0]  # cluster 0 re-embedded onto cluster 1
+np.save("old.npy", old)
+np.save("new.npy", new)
+```
 
 ```
-old: 12000 vectors, new: 12300 vectors, shared ids: 11800
-centroid shift: 0.041288
-  old centroid norm: 0.998104
-  new centroid norm: 0.997622
+$ embed-explorer drift old.npy new.npy --k 4 --top 5
+old: 1000 vectors, new: 1000 vectors, shared ids: 1000
+centroid shift: 9.677400
+  old centroid norm: 13.123491
+  new centroid norm: 16.746184
 
 cluster population changes (matched by centroid similarity):
 old_cluster  new_cluster  old_count  new_count  centroid_similarity
 -----------  -----------  ---------  ---------  -------------------
-0            0            1532       1489       0.9987
-1            3            980        1650       0.9540
-...
+0            2            250        250        1.0000
+1            0            250        250        1.0000
+2            3            250        279        0.9995
+3            1            250        221        -0.1349
 
 items whose neighbourhood changed most (lowest overlap first):
-id           overlap
------------  -------
-chunk-9931   0.1000
-chunk-2210   0.1500
-...
+id   overlap
+---  -------
+152  0.0000
+170  0.0000
+49   0.0000
+105  0.0526
+108  0.0526
 ```
 
 ## Formats
@@ -173,6 +185,8 @@ chunk-2210   0.1500
   `id` and `text` are optional; a missing `id` defaults to the line number.
   All `vector` fields in a file must have the same length, or loading fails
   with a clear error naming the mismatched dimensions.
+- In every format, vectors containing NaN or infinite values are rejected at
+  load time (they would make every distance they touch meaningless).
 - **`.csv`**: a header row, an optional `id` column, an optional `text`
   column, and the remaining columns treated as vector dimensions in file
   order. A missing `id` column defaults to the row number.
@@ -214,6 +228,15 @@ thousands of points but is not tuned for million-point datasets.
   with `allow_pickle=False`, so a malicious `.npy` file cannot execute
   arbitrary code during loading.
 - The only runtime dependency is `numpy`.
+
+## Verification
+
+Cosine/euclidean matrices, the silhouette score and k-means were checked
+against scikit-learn on random data (silhouette max |diff| 7e-17; k-means
+adjusted Rand index 1.0 on 5 separated blobs), and the silhouette against a
+hand-computed value in `tests/test_kmeans.py`. scikit-learn is not a dependency.
+See [SECURITY.md](SECURITY.md) and
+[docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md).
 
 ## License
 
