@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="510" viewBox="0 0 1200 510" role="img" aria-labelledby="t d">
+  <title id="t">embed-explorer module map</title>
+  <desc id="d">An embedding file in .npy, JSONL or CSV format is loaded by dataset.py into an EmbeddingSet of ids, float64 vectors and optional texts, rejecting NaN, mixed dimensions and duplicate ids. Each subcommand calls one analysis module: stats.py, neighbors.py, duplicates.py with union-find grouping, kmeans.py with k-means++ and silhouette, outliers.py, and drift.py, which compares two snapshots. They share the exact pairwise matrices in metrics.py. cli.py renders the result as a table through formatting.py or as JSON.</desc>
+  <rect width="1200" height="510" fill="#0C0D0D"/>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#A3AAA6"/></marker>
+  </defs>
+  <g font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" fill="#A3AAA6" font-size="13">
+    <text x="40" y="44" fill="#EEEAE2" font-size="20" font-weight="600">embed-explorer: one loader, six analyses, exact numpy search</text>
+    <text x="40" y="68">Modules in src/embed_explorer/. Runtime dependency: numpy only. Each CLI subcommand maps to one module.</text>
+  </g>
+  <g fill="#17191A" stroke="#2A2E2D" stroke-width="1.5">
+    <rect x="40" y="110" width="180" height="120" rx="8"/>
+    <rect x="40" y="260" width="180" height="74" rx="8"/>
+    <rect x="260" y="110" width="230" height="224" rx="8"/>
+    <rect x="540" y="96" width="350" height="48" rx="8"/>
+    <rect x="540" y="152" width="350" height="48" rx="8"/>
+    <rect x="540" y="208" width="350" height="48" rx="8"/>
+    <rect x="540" y="264" width="350" height="48" rx="8"/>
+    <rect x="540" y="320" width="350" height="48" rx="8"/>
+    <rect x="540" y="376" width="350" height="48" rx="8" stroke="#3FBF8A"/>
+    <rect x="940" y="110" width="220" height="130" rx="8"/>
+    <rect x="940" y="270" width="220" height="98" rx="8"/>
+  </g>
+  <g font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" fill="#EEEAE2">
+    <text x="56" y="138">input file</text>
+    <text x="56" y="288">second file</text>
+    <text x="276" y="138">dataset.py load()</text>
+    <text x="556" y="117">stats</text>
+    <text x="556" y="173">neighbors</text>
+    <text x="556" y="229">duplicates</text>
+    <text x="556" y="285">cluster</text>
+    <text x="556" y="341">outliers</text>
+    <text x="556" y="397" fill="#3FBF8A">drift</text>
+    <text x="956" y="138">cli.py output</text>
+    <text x="956" y="298">metrics.py</text>
+  </g>
+  <g font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#A3AAA6">
+    <text x="56" y="162">.npy  (n, d) array</text>
+    <text x="56" y="182">.jsonl  id/vector/text</text>
+    <text x="56" y="202">.csv  id, text, dims</text>
+    <text x="56" y="312">drift only:</text>
+    <text x="56" y="326">the new snapshot</text>
+    <text x="276" y="162">npy: allow_pickle=False</text>
+    <text x="276" y="190" fill="#EEEAE2">EmbeddingSet</text>
+    <text x="276" y="210">ids: list[str]</text>
+    <text x="276" y="228">vectors: float64 (n, d)</text>
+    <text x="276" y="246">texts: str | None</text>
+    <text x="276" y="276">rejects: NaN / inf,</text>
+    <text x="276" y="294">mixed dimensions,</text>
+    <text x="276" y="312">duplicate ids</text>
+    <text x="556" y="135">stats.py  norms, unit-normalised?</text>
+    <text x="556" y="191">neighbors.py  exact top-k</text>
+    <text x="556" y="247">duplicates.py  pairs + union-find</text>
+    <text x="556" y="303">kmeans.py  k-means++, silhouette</text>
+    <text x="556" y="359">outliers.py  centroid + isolation</text>
+    <text x="556" y="415">drift.py  centroids, clusters, kNN</text>
+    <text x="956" y="162">formatting.py tables</text>
+    <text x="956" y="182">or --json</text>
+    <text x="956" y="210">exit 1  load / value error</text>
+    <text x="956" y="228">exit 2  usage error</text>
+    <text x="956" y="322">cosine / euclidean</text>
+    <text x="956" y="340">full pairwise matrices</text>
+    <text x="956" y="358">(exact, no ANN index)</text>
+  </g>
+  <g stroke="#A3AAA6" stroke-width="1.5" fill="none">
+    <path d="M490,222 L515,222"/>
+    <path d="M515,120 L515,400"/>
+    <path d="M890,120 L915,120 L915,400 L890,400"/>
+    <path d="M890,176 L915,176"/>
+    <path d="M890,232 L915,232"/>
+    <path d="M890,288 L915,288"/>
+    <path d="M890,344 L915,344"/>
+  </g>
+  <g stroke="#A3AAA6" stroke-width="1.5" fill="none" marker-end="url(#a)">
+    <path d="M220,170 L258,170"/>
+    <path d="M220,297 L258,297"/>
+    <path d="M515,120 L538,120"/>
+    <path d="M515,176 L538,176"/>
+    <path d="M515,232 L538,232"/>
+    <path d="M515,288 L538,288"/>
+    <path d="M515,344 L538,344"/>
+    <path d="M515,400 L538,400"/>
+    <path d="M915,175 L938,175"/>
+  </g>
+  <g stroke="#2A2E2D" stroke-width="1.5" fill="none" stroke-dasharray="4 4">
+    <path d="M940,319 L915,319"/>
+  </g>
+  <g font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#A3AAA6">
+    <text x="540" y="470"><tspan fill="#EEEAE2">Memory grows with n².</tspan> duplicates, outliers, cluster and drift each hold an n × n float64 matrix:</text>
+    <text x="540" y="490">about 1.4 GB peak at 10,000 vectors (measured), roughly 9× that at 30,000.</text>
+  </g>
+</svg>
